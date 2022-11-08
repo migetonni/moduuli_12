@@ -1,14 +1,16 @@
 import requests
-import json
 
-paikkakunta_nimi = input("Anna paikkakunta")
+api_avain = "141fbef3e368ac242ac87216351df057"
 
-kaupunki_muutin = "http://api.openweathermap.org/geo/1.0/direct?q=" + paikkakunta_nimi + "141fbef3e368ac242ac87216351df057"
 
-vastaus1 = requests.get(kaupunki_muutin).json()
+kaupunki = input("Anna kaupunki ")
 
-print(vastaus1)
+saa_tieto = requests.get(f"http://api.openweathermap.org/data/2.5/weather?q={kaupunki}&appid={api_avain}").json()
 
-saa_haku = "https://api.openweathermap.org/data/3.0/onecall?lat=" + vastaus1 + "141fbef3e368ac242ac87216351df057"
+lat = saa_tieto["coord"]["lat"]
+lon = saa_tieto["coord"]["lon"]
 
-print(json.dumps(saa_haku, indent=2))
+url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_avain}"
+response = requests.get(url).json()
+
+print(response['weather'][0]['description'], str(response['main']['temp'] - 273.15) + '°C')
